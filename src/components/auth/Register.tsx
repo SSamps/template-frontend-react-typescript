@@ -1,7 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import { registerActionCreator } from '../../redux/actions/authAction';
+import { registerProps } from '../../redux/actions/authAction';
 
-const Register = () => {
+interface Props {
+    registerActionCreator: (formData: registerProps) => void;
+}
+
+const Register = ({ registerActionCreator }: Props) => {
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
@@ -20,7 +28,7 @@ const Register = () => {
         if (password !== password2) {
             console.log('Passwords do not match');
         } else {
-            console.log('Success');
+            registerActionCreator({ displayName, email, password });
         }
     };
 
@@ -82,4 +90,8 @@ const Register = () => {
     );
 };
 
-export default Register;
+Register.propTypes = {
+    registerActionCreator: propTypes.func.isRequired,
+};
+
+export default connect(null, { registerActionCreator })(Register);
