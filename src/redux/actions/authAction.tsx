@@ -22,6 +22,7 @@ export const registerActionCreator = ({ displayName, email, password }: register
 
     try {
         const res = await axios.post('/api/users', body, config);
+        console.log(res);
         dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data,
