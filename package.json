@@ -25,7 +25,7 @@
         "typescript": "^4.2.4"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "dev": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
@@ -33,7 +33,7 @@
         "dockerRemoveImage": "docker image rm listapp-frontend:latest -f",
         "dockerBuildImage": "docker build --build-arg REACT_APP_BACKEND_BASE_URL=http://localhost:5000 -t listapp-frontend:latest .",
         "dockerBuildContainer": "docker run --name listapp-frontend -d -p 3100:3100 -e PORT=3100 --network test_network listapp-frontend:latest",
-        "dockerBuild": "npm-run-all -s -c dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer"
+        "export": "npm-run-all -s -c dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer"
     },
     "eslintConfig": {
         "extends": [
