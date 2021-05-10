@@ -13,7 +13,6 @@
         "@types/react-dom": "^17.0.3",
         "@types/react-router-dom": "^5.1.7",
         "axios": "^0.21.1",
-        "npm-run-all": "^4.1.5",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-redux": "^7.2.4",
@@ -25,15 +24,21 @@
         "typescript": "^4.2.4"
     },
     "scripts": {
-        "dev": "react-scripts start",
+        "devLocal": "react-scripts start",
+        "dev": "nodemon -e '*' -w '*' -i .vscode/ -i .gitignore -i build/ --exec npm run exportDev",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "dockerRemoveContainer": "docker rm listapp-frontend -f",
-        "dockerRemoveImage": "docker image rm listapp-frontend:latest -f",
-        "dockerBuildImage": "docker build --build-arg REACT_APP_BACKEND_BASE_URL=http://localhost:5000 -t listapp-frontend:latest .",
+        "dockerRemoveContainer": "docker rm listapp-frontend --force",
+        "dockerRemoveImage": "docker image rm listapp-frontend:latest --force",
+        "dockerBuildImage": "docker build --build-arg REACT_APP_BACKEND_BASE_URL=http://localhost:5000 -t listapp-frontend:latest --file docker/prod/Dockerfile .",
         "dockerBuildContainer": "docker run --name listapp-frontend -d -p 3100:3100 -e PORT=3100 --network test_network listapp-frontend:latest",
-        "export": "npm-run-all -s -c dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer"
+        "dockerRemoveContainerDev": "docker rm listapp-frontend-dev --force",
+        "dockerRemoveImageDev": "docker image rm listapp-frontend-dev:latest --force",
+        "dockerBuildImageDev": "docker build -t listapp-frontend-dev:latest --file docker/dev/Dockerfile .",
+        "dockerBuildContainerDev": "docker run --name listapp-frontend-dev -d -p 3000:3000 -e PORT=3000 --network test_network listapp-frontend-dev:latest",
+        "export": "npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer",
+        "exportDev": "npm run dockerRemoveContainerDev && npm run dockerRemoveImageDev && npm run dockerBuildImageDev && npm run dockerBuildContainerDev"
     },
     "eslintConfig": {
         "extends": [
@@ -53,5 +58,5 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://localhost:5000"
+    "proxy": "http://listapp-backend:5000"
 }
