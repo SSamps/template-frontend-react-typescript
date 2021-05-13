@@ -1,15 +1,15 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { registerActionCreator } from '../../redux/actions/authAction';
-import { registerProps } from '../../redux/actions/authAction';
+import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authAction';
 
 interface Props {
-    registerActionCreator: (formData: registerProps) => void;
+    registerActionCreator: TregisterActionCreator;
+    isAuthenticated: boolean | null;
 }
 
-const Register = ({ registerActionCreator }: Props) => {
+const Register = ({ registerActionCreator, isAuthenticated }: Props) => {
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
@@ -28,9 +28,13 @@ const Register = ({ registerActionCreator }: Props) => {
         if (password !== password2) {
             console.log('Passwords do not match');
         } else {
-            registerActionCreator({ displayName, email, password });
+            registerActionCreator(displayName, email, password);
         }
     };
+
+    if (isAuthenticated) {
+        return <Redirect to='/dashboard' />;
+    }
 
     return (
         <Fragment>
@@ -92,6 +96,11 @@ const Register = ({ registerActionCreator }: Props) => {
 
 Register.propTypes = {
     registerActionCreator: propTypes.func.isRequired,
+    isAuthenticated: propTypes.bool,
 };
 
-export default connect(null, { registerActionCreator })(Register);
+const mapStateToProps = (state: { authReducer: { isAuthenticated: boolean } }) => ({
+    isAuthenticated: state.authReducer.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { registerActionCreator })(Register);
