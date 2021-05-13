@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
 import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authAction';
 
 interface Props {
@@ -92,11 +91,6 @@ const Register = ({ registerActionCreator, isAuthenticated }: Props) => {
             </p>
         </Fragment>
     );
-};
-
-Register.propTypes = {
-    registerActionCreator: propTypes.func.isRequired,
-    isAuthenticated: propTypes.bool,
 };
 
 const mapStateToProps = (state: { authReducer: { isAuthenticated: boolean } }) => ({

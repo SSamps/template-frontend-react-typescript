@@ -1,6 +1,14 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL } from './actionTypes';
+import {
+    REGISTER_SUCCESS,
+    REGISTER_FAIL,
+    USER_LOADED,
+    AUTH_ERROR,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+    LOGOUT,
+} from './actionTypes';
 import setAuthToken from '../../utils/setAuthToken';
 import { IUser } from '../../types/models/User';
 
@@ -83,4 +91,18 @@ export const loginActionCreator = (email: string, password: string) => async (di
     } catch (err) {
         dispatch({ type: LOGIN_FAIL });
     }
+};
+
+export interface IlogoutAction {
+    type: typeof LOGOUT;
+}
+
+// Logout
+export interface IlogoutAction {
+    type: typeof LOGOUT;
+}
+export type TlogoutActionCreator = () => void;
+
+export const logoutActionCreator = () => async (dispatch: Dispatch<IlogoutAction>) => {
+    dispatch({ type: LOGOUT });
 };

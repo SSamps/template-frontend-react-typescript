@@ -5,6 +5,7 @@ import {
     AUTH_ERROR,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    LOGOUT,
 } from '../actions/actionTypes';
 import { IUser } from '../../types/models/User';
 import { AnyAction } from 'redux';
@@ -37,7 +38,6 @@ export default function reducer(state: authState = initialState, action: AnyActi
         case LOGIN_SUCCESS:
         case REGISTER_SUCCESS:
             localStorage.setItem('token', payload.token);
-            console.log('succeeded');
             return {
                 ...state,
                 ...payload,
@@ -47,13 +47,14 @@ export default function reducer(state: authState = initialState, action: AnyActi
         case LOGIN_FAIL:
         case REGISTER_FAIL:
         case AUTH_ERROR:
+        case LOGOUT:
             localStorage.removeItem('token');
-            console.log('Failed');
             return {
                 ...state,
                 token: null,
                 isAuthenticated: false,
                 loading: false,
+                user: null,
             };
         default:
             return {
