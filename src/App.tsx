@@ -1,10 +1,13 @@
 import { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './styles/App.css';
+// Components
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
 //Utils
 import setAuthToken from './utils/setAuthToken';
 //Redux
@@ -22,7 +25,6 @@ if (localStorage.token) {
 const App = () => {
     console.log('run');
     useEffect(() => {
-        //TODO: figure out how to type this properly
         loadUserActionCreator(store.dispatch);
     }, []);
 
@@ -36,6 +38,7 @@ const App = () => {
                         <Switch>
                             <Route exact path='/register' component={Register} />
                             <Route exact path='/login' component={Login} />
+                            <PrivateRoute exact path='/dashboard' component={Dashboard} />
                         </Switch>
                     </section>
                 </Fragment>

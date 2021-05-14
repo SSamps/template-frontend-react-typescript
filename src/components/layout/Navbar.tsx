@@ -13,9 +13,14 @@ const Navbar = ({ logoutActionCreator, loading, isAuthenticated }: Props) => {
     const authedLinks = (
         <ul>
             <li>
-                <a onClick={() => logoutActionCreator()} href='#!'>
-                    <i></i> <span>Logout</span>
-                </a>
+                <Link to='/dashboard'>
+                    <i className='fas fa-user'></i> <span className='hide-sm'>Dashboard</span>
+                </Link>
+            </li>
+            <li>
+                <Link to='/' onClick={() => logoutActionCreator()}>
+                    <i className='fas fa-sign-out-alt'></i> <span className='hide-sm'>Logout</span>
+                </Link>
             </li>
         </ul>
     );

@@ -1,6 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { IauthState } from '../../redux/reducers/authReducer';
 
-const landing = () => {
+const landing = ({ isAuthenticated }: { isAuthenticated: boolean | null }) => {
+    if (isAuthenticated) {
+        return <Redirect to='/dashboard' />;
+    }
+
     return (
         <section className='landing'>
             <div className='dark-overlay'>
@@ -21,4 +27,8 @@ const landing = () => {
     );
 };
 
-export default landing;
+const mapStateToProps = (state: { authReducer: IauthState }) => ({
+    isAuthenticated: state.authReducer.isAuthenticated,
+});
+
+export default connect(mapStateToProps)(landing);

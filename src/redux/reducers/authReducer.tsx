@@ -10,7 +10,7 @@ import {
 import { IUser } from '../../types/models/User';
 import { AnyAction } from 'redux';
 
-export interface authState {
+export interface IauthState {
     token: string | null;
     isAuthenticated: boolean | null;
     loading: boolean;
@@ -23,8 +23,8 @@ const initialState = {
     loading: true,
     user: null,
 };
-// | IregisterUserAction |
-export default function reducer(state: authState = initialState, action: AnyAction): authState {
+
+export default function reducer(state: IauthState = initialState, action: AnyAction): IauthState {
     const { type, payload } = action;
 
     switch (type) {
