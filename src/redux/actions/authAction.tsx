@@ -55,7 +55,6 @@ export const registerActionCreator =
 
         try {
             const res = await axios.post('/api/users', body, config);
-            console.log(res);
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data,
@@ -66,7 +65,7 @@ export const registerActionCreator =
     };
 
 // Login
-export type TloginActionCreator = (email: string, password: string) => void;
+export type TloginActionCreator = (email: string, password: string) => Promise<string>;
 export interface IloginUserAction {
     type: typeof LOGIN_SUCCESS | typeof LOGIN_FAIL;
     payload?: { token: string };
@@ -90,6 +89,7 @@ export const loginActionCreator = (email: string, password: string) => async (di
         });
     } catch (err) {
         dispatch({ type: LOGIN_FAIL });
+        return err.response.data.errors[0]['msg'];
     }
 };
 

@@ -13,9 +13,10 @@ const Login = ({ loginActionCreator, isAuthenticated }: Props) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+        loginError: '',
     });
 
-    const { email, password } = formData;
+    const { email, password, loginError } = formData;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +24,10 @@ const Login = ({ loginActionCreator, isAuthenticated }: Props) => {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        loginActionCreator(email, password);
+        var error = await loginActionCreator(email, password);
+        if (error) {
+            setFormData({ ...formData, loginError: error });
+        }
     };
 
     if (isAuthenticated) {
@@ -58,6 +62,7 @@ const Login = ({ loginActionCreator, isAuthenticated }: Props) => {
                         required
                     />
                 </div>
+                {<p className='form-error-message'>{loginError}</p>}
                 <input type='submit' className='btn btn-primary' value='Login' />
             </form>
             <p className='my-1'>
