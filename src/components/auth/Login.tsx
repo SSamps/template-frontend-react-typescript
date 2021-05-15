@@ -14,11 +14,13 @@ interface Props {
 const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
     const [formData, setFormData] = useState({
         email: '',
+        emailErrorHighlight: false,
         password: '',
+        passwordErrorHighlight: false,
         loginError: '',
     });
 
-    const { email, password, loginError } = formData;
+    const { email, password, loginError, emailErrorHighlight, passwordErrorHighlight } = formData;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,12 +28,18 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setFormData({ ...formData, loginError: '', emailErrorHighlight: false, passwordErrorHighlight: false });
         var err = await loginActionCreator(email, password);
         if (err) {
             if (axios.isAxiosError(err) && err.response) {
                 switch (err.response.status) {
                     case 400:
-                        setFormData({ ...formData, loginError: 'Incorrect email or password' });
+                        setFormData({
+                            ...formData,
+                            loginError: 'Incorrect email or password',
+                            emailErrorHighlight: true,
+                            passwordErrorHighlight: true,
+                        });
                         break;
                     default:
                         setFormData({ ...formData, loginError: 'Server error: Code ' + err.response.status });
@@ -55,6 +63,7 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
             <form className='form' onSubmit={(e) => onSubmit(e)}>
                 <div className='form-group'>
                     <input
+                        className={emailErrorHighlight ? 'form-error-field' : ''}
                         type='email'
                         placeholder='Email Address'
                         name='email'
@@ -65,6 +74,7 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
                 </div>
                 <div className='form-group'>
                     <input
+                        className={passwordErrorHighlight ? 'form-error-field' : ''}
                         type='password'
                         placeholder='Password'
                         name='password'
