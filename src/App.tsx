@@ -16,6 +16,8 @@ import store from './redux/reducers/root/reducerStore';
 import { loadUserActionCreator } from './redux/actions/authAction';
 //Axios
 import axios from 'axios';
+
+// Defaults to localhost if not set. This is set in the prod container and is proxied using the proxy field in package.json when running the react dev server.
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_BASE_URL;
 
 if (localStorage.token) {
@@ -23,7 +25,6 @@ if (localStorage.token) {
 }
 
 const App = () => {
-    console.log('run');
     useEffect(() => {
         loadUserActionCreator(store.dispatch);
     }, []);

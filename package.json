@@ -25,20 +25,20 @@
     },
     "scripts": {
         "devLocal": "react-scripts start",
-        "dev": "nodemon -e '*' -w '*' -i .vscode/ -i .gitignore -i build/ --exec npm run exportDev",
+        "dev": "nodemon -e '*' -w docker/dev -w package.json --exec npm run exportDev",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "dockerRemoveContainer": "docker rm listapp-frontend --force",
-        "dockerRemoveImage": "docker image rm listapp-frontend:latest --force",
-        "dockerBuildImage": "docker build --build-arg REACT_APP_BACKEND_BASE_URL=http://localhost:5000 -t listapp-frontend:latest --file docker/prod/Dockerfile .",
-        "dockerBuildContainer": "docker run --name listapp-frontend -d -p 3100:3100 -e PORT=3100 --network test_network listapp-frontend:latest",
-        "dockerRemoveContainerDev": "docker rm listapp-frontend-dev --force",
-        "dockerRemoveImageDev": "docker image rm listapp-frontend-dev:latest --force",
-        "dockerBuildImageDev": "docker build -t listapp-frontend-dev:latest --file docker/dev/Dockerfile .",
-        "dockerBuildContainerDev": "docker run --name listapp-frontend-dev -d -p 3000:3000 -e PORT=3000 --network test_network listapp-frontend-dev:latest",
-        "export": "npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer",
-        "exportDev": "npm run dockerRemoveContainerDev && npm run dockerRemoveImageDev && npm run dockerBuildImageDev && npm run dockerBuildContainerDev"
+        "dockerRemoveContainer": "docker rm listapp-frontend-prod --force",
+        "dockerRemoveImage": "docker image rm listapp-frontend-prod:latest --force",
+        "dockerBuildImage": "docker build --build-arg REACT_APP_BACKEND_BASE_URL=http://localhost:5000 -t listapp-frontend-prod:latest --file docker/prod/Dockerfile .",
+        "dockerBuildContainer": "docker run --name listapp-frontend-prod -d -p 3100:3100 -e PORT=3100 --network test_network listapp-frontend-prod:latest",
+        "dockerRemoveContainerDev": "docker rm listapp-frontend-dev -f",
+        "dockerRemoveImageDev": "docker rmi listapp-frontend:dev -f",
+        "dockerBuildImageDev": "docker build -t listapp-frontend:dev -f docker/dev/Dockerfile .",
+        "dockerBuildContainerDev": "docker run --name listapp-frontend-dev -v $(pwd):/app -d -p 3000:3000 --network test_network listapp-frontend:dev",
+        "exportDev": "npm run dockerRemoveContainerDev && npm run dockerRemoveImageDev && npm run dockerBuildImageDev && npm run dockerBuildContainerDev",
+        "export": "npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer"
     },
     "eslintConfig": {
         "extends": [

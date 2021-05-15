@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
 import { IUser } from '../../types/models/User';
@@ -8,7 +9,11 @@ interface Props {
 }
 
 const Dashboard: React.FC<Props> = ({ user, loading }): JSX.Element => {
-    return <div>{loading ? <div>Loading</div> : user && <div>Hello {user.displayName}</div>}</div>;
+    return (
+        <Fragment>
+            <div>{loading ? <div>Loading</div> : user && <div>Hello {user.displayName}</div>}</div>
+        </Fragment>
+    );
 };
 
 const mapStateToProps = (state: IrootState) => ({
