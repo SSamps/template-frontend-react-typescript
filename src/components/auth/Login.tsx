@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { loginActionCreator, TloginActionCreator } from '../../redux/actions/authAction';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
+import axios from 'axios';
 
 interface Props {
     loginActionCreator: TloginActionCreator;
@@ -25,9 +26,19 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        var error = await loginActionCreator(email, password);
-        if (error) {
-            setFormData({ ...formData, loginError: error });
+        var err = await loginActionCreator(email, password);
+        if (err) {
+            if (axios.isAxiosError(err) && err.response) {
+                switch (err.response.status) {
+                    case 400:
+                        setFormData({ ...formData, loginError: 'Incorrect email or password' });
+                        break;
+                    default:
+                        setFormData({ ...formData, loginError: 'Server error: Code ' + err.response.status });
+                }
+            } else {
+                setFormData({ ...formData, loginError: 'Server error' });
+            }
         }
     };
 

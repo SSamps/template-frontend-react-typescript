@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosPromise } from 'axios';
 import { Dispatch } from 'redux';
 import {
     REGISTER_SUCCESS,
@@ -65,7 +65,7 @@ export const registerActionCreator =
     };
 
 // Login
-export type TloginActionCreator = (email: string, password: string) => Promise<string>;
+export type TloginActionCreator = (email: string, password: string) => AxiosPromise<Error | AxiosError>;
 export interface IloginUserAction {
     type: typeof LOGIN_SUCCESS | typeof LOGIN_FAIL;
     payload?: { token: string };
@@ -82,14 +82,13 @@ export const loginActionCreator = (email: string, password: string) => async (di
 
     try {
         const res = await axios.post('/api/auth', body, config);
-        console.log(res);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data,
         });
     } catch (err) {
         dispatch({ type: LOGIN_FAIL });
-        return err.response.data.errors[0]['msg'];
+        return err;
     }
 };
 
