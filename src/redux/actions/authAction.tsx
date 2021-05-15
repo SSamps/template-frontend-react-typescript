@@ -37,7 +37,11 @@ export const loadUserActionCreator = async (dispatch: Dispatch<IloadUserAction>)
 };
 
 // Register User
-export type TregisterActionCreator = (displayName: string, email: string, password: string) => void;
+export type TregisterActionCreator = (
+    displayName: string,
+    email: string,
+    password: string
+) => AxiosPromise<Error | AxiosError>;
 export interface IregisterUserAction {
     type: typeof REGISTER_SUCCESS | typeof REGISTER_FAIL;
     payload?: { token: string };
@@ -61,6 +65,7 @@ export const registerActionCreator =
             });
         } catch (err) {
             dispatch({ type: REGISTER_FAIL });
+            return err;
         }
     };
 

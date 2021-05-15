@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authAction';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 interface Props {
     registerActionCreator: TregisterActionCreator;
@@ -13,22 +14,57 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
+        emailErrorHighlight: false,
         password: '',
         password2: '',
+        passwordErrorHighlight: false,
+        registerError: '',
     });
 
-    const { displayName, email, password, password2 } = formData;
+    const { displayName, email, password, password2, registerError, emailErrorHighlight, passwordErrorHighlight } =
+        formData;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleMatchingPasswordError = (resetFormErrorState: any) => {
+        setFormData({ ...resetFormErrorState, registerError: 'Passwords do not match', passwordErrorHighlight: true });
+    };
+
+    const handleRequestError = (resetFormErrorState: any, err: AxiosResponse<AxiosError<any> | Error>) => {
+        if (axios.isAxiosError(err) && err.response) {
+            switch (err.response.status) {
+                case 400:
+                    setFormData({
+                        ...formData,
+                        registerError: 'An account already exists with that email address.',
+                        emailErrorHighlight: true,
+                    });
+                    break;
+                default:
+                    setFormData({ ...resetFormErrorState, registerError: 'Server error: Code ' + err.response.status });
+            }
+        } else {
+            setFormData({ ...resetFormErrorState, registerError: 'Server error' });
+        }
+    };
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        let resetFormErrorState = {
+            ...formData,
+            registerError: '',
+            emailErrorHighlight: false,
+            passwordErrorHighlight: false,
+        };
         e.preventDefault();
         if (password !== password2) {
-            console.log('Passwords do not match');
+            handleMatchingPasswordError(resetFormErrorState);
         } else {
-            registerActionCreator(displayName, email, password);
+            var err = await registerActionCreator(displayName, email, password);
+            if (err) {
+                handleRequestError(resetFormErrorState, err);
+            }
         }
     };
 
@@ -55,6 +91,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                 </div>
                 <div className='form-group'>
                     <input
+                        className={emailErrorHighlight ? 'form-error-field' : ''}
                         type='email'
                         placeholder='Email Address'
                         name='email'
@@ -65,6 +102,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                 </div>
                 <div className='form-group'>
                     <input
+                        className={passwordErrorHighlight ? 'form-error-field' : ''}
                         type='password'
                         placeholder='Password'
                         name='password'
@@ -76,6 +114,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                 </div>
                 <div className='form-group'>
                     <input
+                        className={passwordErrorHighlight ? 'form-error-field' : ''}
                         type='password'
                         placeholder='Confirm Password'
                         name='password2'
@@ -85,6 +124,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                         required
                     />
                 </div>
+                {<p className='form-error-message'>{registerError}</p>}
                 <input type='submit' className='btn btn-primary' value='Register' />
             </form>
             <p className='my-1'>
