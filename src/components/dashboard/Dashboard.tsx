@@ -1,11 +1,17 @@
 import { connect } from 'react-redux';
-import { IauthState } from '../../redux/reducers/authReducer';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
+import { IUser } from '../../types/models/User';
 
-const Dashboard: React.ComponentType<any> = ({ user, loading }) => {
-    return <div>{loading ? <div>Loading</div> : <div>Hello {user.displayName}</div>}</div>;
+interface Props {
+    user: IUser | null;
+    loading: boolean;
+}
+
+const Dashboard: React.FC<Props> = ({ user, loading }): JSX.Element => {
+    return <div>{loading ? <div>Loading</div> : user && <div>Hello {user.displayName}</div>}</div>;
 };
 
-const mapStateToProps = (state: { authReducer: IauthState }) => ({
+const mapStateToProps = (state: IrootState) => ({
     user: state.authReducer.user,
     loading: state.authReducer.loading,
 });

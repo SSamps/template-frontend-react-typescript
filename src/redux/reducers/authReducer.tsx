@@ -12,14 +12,14 @@ import { AnyAction } from 'redux';
 
 export interface IauthState {
     token: string | null;
-    isAuthenticated: boolean | null;
+    isAuthenticated: boolean;
     loading: boolean;
-    user: IUser | null | undefined;
+    user: IUser | null;
 }
 
 const initialState = {
     token: localStorage.getItem('token'),
-    isAuthenticated: null,
+    isAuthenticated: false,
     loading: true,
     user: null,
 };

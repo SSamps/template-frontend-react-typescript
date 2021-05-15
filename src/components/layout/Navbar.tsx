@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logoutActionCreator, TlogoutActionCreator } from '../../redux/actions/authAction';
 import { Fragment } from 'react';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
 
 interface Props {
     logoutActionCreator: TlogoutActionCreator;
@@ -9,7 +10,7 @@ interface Props {
     isAuthenticated: boolean | null;
 }
 
-const Navbar = ({ logoutActionCreator, loading, isAuthenticated }: Props) => {
+const Navbar: React.FC<Props> = ({ logoutActionCreator, loading, isAuthenticated }) => {
     const authedLinks = (
         <ul>
             <li>
@@ -48,7 +49,7 @@ const Navbar = ({ logoutActionCreator, loading, isAuthenticated }: Props) => {
     );
 };
 
-const mapStateToProps = (state: { authReducer: { loading: boolean; isAuthenticated: boolean } }) => ({
+const mapStateToProps = (state: IrootState) => ({
     loading: state.authReducer.loading,
     isAuthenticated: state.authReducer.isAuthenticated,
 });

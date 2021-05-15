@@ -2,13 +2,14 @@ import React, { Fragment, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authAction';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
 
 interface Props {
     registerActionCreator: TregisterActionCreator;
     isAuthenticated: boolean | null;
 }
 
-const Register = ({ registerActionCreator, isAuthenticated }: Props) => {
+const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) => {
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
@@ -93,7 +94,7 @@ const Register = ({ registerActionCreator, isAuthenticated }: Props) => {
     );
 };
 
-const mapStateToProps = (state: { authReducer: { isAuthenticated: boolean } }) => ({
+const mapStateToProps = (state: IrootState) => ({
     isAuthenticated: state.authReducer.isAuthenticated,
 });
 

@@ -3,13 +3,14 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { loginActionCreator, TloginActionCreator } from '../../redux/actions/authAction';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
 
 interface Props {
     loginActionCreator: TloginActionCreator;
     isAuthenticated: boolean | null;
 }
 
-const Login = ({ loginActionCreator, isAuthenticated }: Props) => {
+const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -72,7 +73,7 @@ const Login = ({ loginActionCreator, isAuthenticated }: Props) => {
     );
 };
 
-const mapStateToProps = (state: { authReducer: { isAuthenticated: boolean } }) => ({
+const mapStateToProps = (state: IrootState) => ({
     isAuthenticated: state.authReducer.isAuthenticated,
 });
 

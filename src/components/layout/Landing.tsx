@@ -1,8 +1,12 @@
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IauthState } from '../../redux/reducers/authReducer';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
 
-const landing = ({ isAuthenticated }: { isAuthenticated: boolean | null }) => {
+interface Props {
+    isAuthenticated: boolean | null;
+}
+
+const landing: React.FC<Props> = ({ isAuthenticated }) => {
     if (isAuthenticated) {
         return <Redirect to='/dashboard' />;
     }
@@ -27,7 +31,7 @@ const landing = ({ isAuthenticated }: { isAuthenticated: boolean | null }) => {
     );
 };
 
-const mapStateToProps = (state: { authReducer: IauthState }) => ({
+const mapStateToProps = (state: IrootState) => ({
     isAuthenticated: state.authReducer.isAuthenticated,
 });
 

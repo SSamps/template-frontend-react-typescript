@@ -1,13 +1,19 @@
 import { connect } from 'react-redux';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { IrootState } from '../../redux/reducers/root/rootReducer';
 
 type TprotectedRouteProps = {
-    isAuthenticated: boolean;
+    isAuthenticated: boolean | null;
     loading: boolean;
     component: React.ComponentType<any>;
 } & RouteProps;
 
-const PrivateRoute = ({ component: Component, isAuthenticated, loading, ...routeProps }: TprotectedRouteProps) => {
+const PrivateRoute: React.FC<TprotectedRouteProps> = ({
+    component: Component,
+    isAuthenticated,
+    loading,
+    ...routeProps
+}) => {
     return (
         <Route
             {...routeProps}
@@ -18,7 +24,7 @@ const PrivateRoute = ({ component: Component, isAuthenticated, loading, ...route
     );
 };
 
-const mapStateToProps = (state: { authReducer: { isAuthenticated: boolean; loading: boolean } }) => ({
+const mapStateToProps = (state: IrootState) => ({
     isAuthenticated: state.authReducer.isAuthenticated,
     loading: state.authReducer.loading,
 });
