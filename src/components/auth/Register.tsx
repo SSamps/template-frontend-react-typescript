@@ -28,42 +28,53 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleMatchingPasswordError = (resetFormErrorState: any) => {
-        setFormData({ ...resetFormErrorState, registerError: 'Passwords do not match', passwordErrorHighlight: true });
+    const resetErrorStateTemp = async () => {
+        setFormData({
+            ...formData,
+            registerError: '',
+            emailErrorHighlight: false,
+            passwordErrorHighlight: false,
+        });
     };
 
-    const handleRequestError = (resetFormErrorState: any, err: AxiosResponse<AxiosError<any> | Error>) => {
+    const handleNotMatchingPasswordError = (resetErrorState: any) => {
+        setFormData({ ...resetErrorState, registerError: 'Passwords do not match', passwordErrorHighlight: true });
+    };
+
+    const handleRequestError = (resetErrorState: any, err: AxiosResponse<AxiosError<any> | Error>) => {
         if (axios.isAxiosError(err) && err.response) {
             switch (err.response.status) {
                 case 400:
                     setFormData({
-                        ...formData,
+                        ...resetErrorState,
                         registerError: 'An account already exists with that email address.',
                         emailErrorHighlight: true,
                     });
                     break;
                 default:
-                    setFormData({ ...resetFormErrorState, registerError: 'Server error: Code ' + err.response.status });
+                    setFormData({ ...resetErrorState, registerError: 'Server error: Code ' + err.response.status });
             }
         } else {
-            setFormData({ ...resetFormErrorState, registerError: 'Server error' });
+            setFormData({ ...resetErrorState, registerError: 'Server error' });
         }
     };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        let resetFormErrorState = {
+        let resetErrorState = {
             ...formData,
             registerError: '',
             emailErrorHighlight: false,
             passwordErrorHighlight: false,
         };
+
         e.preventDefault();
+        await resetErrorStateTemp();
         if (password !== password2) {
-            handleMatchingPasswordError(resetFormErrorState);
+            handleNotMatchingPasswordError(resetErrorState);
         } else {
             var err = await registerActionCreator(displayName, email, password);
             if (err) {
-                handleRequestError(resetFormErrorState, err);
+                handleRequestError(resetErrorState, err);
             }
         }
     };
