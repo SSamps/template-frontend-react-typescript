@@ -49,6 +49,7 @@ export interface IregisterUserAction {
 
 export const registerActionCreator =
     (displayName: string, email: string, password: string) => async (dispatch: Dispatch<IregisterUserAction>) => {
+        console.log('inside the action creator');
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -58,13 +59,16 @@ export const registerActionCreator =
         const body = JSON.stringify({ displayName, email, password });
 
         try {
+            console.log('sending axios request');
             const res = await axios.post('/api/users', body, config);
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data,
             });
         } catch (err) {
+            console.log('dispatching REGISTER_FAIL action');
             dispatch({ type: REGISTER_FAIL });
+            console.log('returning error from action creator');
             return err;
         }
     };

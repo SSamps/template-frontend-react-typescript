@@ -28,7 +28,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const resetErrorStateTemp = async () => {
+    const resetErrorState = async () => {
         setFormData({
             ...formData,
             registerError: '',
@@ -37,44 +37,45 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
         });
     };
 
-    const handleNotMatchingPasswordError = (resetErrorState: any) => {
-        setFormData({ ...resetErrorState, registerError: 'Passwords do not match', passwordErrorHighlight: true });
+    const handleNotMatchingPasswordError = () => {
+        setFormData({ ...formData, registerError: 'Passwords do not match', passwordErrorHighlight: true });
     };
 
-    const handleRequestError = (resetErrorState: any, err: AxiosResponse<AxiosError<any> | Error>) => {
+    const handleRequestError = (err: AxiosResponse<AxiosError<any> | Error>) => {
         if (axios.isAxiosError(err) && err.response) {
             switch (err.response.status) {
                 case 400:
                     setFormData({
-                        ...resetErrorState,
+                        ...formData,
                         registerError: 'An account already exists with that email address.',
                         emailErrorHighlight: true,
                     });
                     break;
                 default:
-                    setFormData({ ...resetErrorState, registerError: 'Server error: Code ' + err.response.status });
+                    console.log('returning an error with a code other than 400');
+                    setFormData({ ...formData, registerError: 'Server error: Code ' + err.response.status });
             }
         } else {
-            setFormData({ ...resetErrorState, registerError: 'Server error' });
+            setFormData({ ...formData, registerError: 'Server error' });
         }
     };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        let resetErrorState = {
-            ...formData,
-            registerError: '',
-            emailErrorHighlight: false,
-            passwordErrorHighlight: false,
-        };
-
         e.preventDefault();
-        await resetErrorStateTemp();
+        console.log('before the error state reset registerError is: ' + registerError);
+        console.log('resetting error state using setFormData()');
+        await resetErrorState();
+        console.log('after the error state reset registerError is: ' + registerError);
         if (password !== password2) {
-            handleNotMatchingPasswordError(resetErrorState);
+            console.log('handling matches passwords');
+            handleNotMatchingPasswordError();
         } else {
+            console.log('calling the registerActionCreator');
             var err = await registerActionCreator(displayName, email, password);
+            console.log('returned from registerActionCreator ');
             if (err) {
-                handleRequestError(resetErrorState, err);
+                console.log('handling request errors');
+                handleRequestError(err);
             }
         }
     };
@@ -135,6 +136,10 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                         required
                     />
                 </div>
+                {console.log('----------')}
+                {console.log('Rerendering - the returned JSX thinks registerError is: ' + registerError)}
+                {console.log('Rerendering - the returned JSX thinks emailErrorHighlight is: ' + emailErrorHighlight)}
+                {console.log('----------')}
                 {<p className='form-error-message'>{registerError}</p>}
                 <input type='submit' className='btn btn-primary' value='Register' />
             </form>
