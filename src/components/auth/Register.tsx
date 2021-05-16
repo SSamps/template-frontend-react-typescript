@@ -19,21 +19,23 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
         password2: '',
         passwordErrorHighlight: false,
         registerError: '',
+        id: 0,
     });
 
-    const { displayName, email, password, password2, registerError, emailErrorHighlight, passwordErrorHighlight } =
+    const { displayName, email, password, password2, registerError, emailErrorHighlight, passwordErrorHighlight, id } =
         formData;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const resetErrorState = async () => {
+    const resetErrorState = () => {
         setFormData({
             ...formData,
             registerError: '',
             emailErrorHighlight: false,
             passwordErrorHighlight: false,
+            id: 1,
         });
     };
 
@@ -49,23 +51,24 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                         ...formData,
                         registerError: 'An account already exists with that email address.',
                         emailErrorHighlight: true,
+                        id: 3,
                     });
                     break;
                 default:
                     console.log('returning an error with a code other than 400');
-                    setFormData({ ...formData, registerError: 'Server error: Code ' + err.response.status });
+                    setFormData({ ...formData, registerError: 'Server error: Code ' + err.response.status, id: 4 });
             }
         } else {
-            setFormData({ ...formData, registerError: 'Server error' });
+            setFormData({ ...formData, registerError: 'Server error', id: 5 });
         }
     };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('before the error state reset registerError is: ' + registerError);
+        console.log('before the error state reset the id var is: ' + id + ' and formData.id is: ' + formData.id);
         console.log('resetting error state using setFormData()');
-        await resetErrorState();
-        console.log('after the error state reset registerError is: ' + registerError);
+        resetErrorState();
+        console.log('after the error state reset the id var is: ' + id + ' and formData.id is: ' + formData.id);
         if (password !== password2) {
             console.log('handling matches passwords');
             handleNotMatchingPasswordError();
@@ -78,6 +81,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                 handleRequestError(err);
             }
         }
+        console.log('at the end of the block the id var is: ' + id + ' and formData.id is: ' + formData.id);
     };
 
     if (isAuthenticated) {
@@ -137,8 +141,9 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                     />
                 </div>
                 {console.log('----------')}
-                {console.log('Rerendering - the returned JSX thinks registerError is: ' + registerError)}
-                {console.log('Rerendering - the returned JSX thinks emailErrorHighlight is: ' + emailErrorHighlight)}
+                {console.log(
+                    'Rerendering - the returned JSX thinks id var is: ' + id + ' and formData.id is: ' + formData.id
+                )}
                 {console.log('----------')}
                 {<p className='form-error-message'>{registerError}</p>}
                 <input type='submit' className='btn btn-primary' value='Register' />
