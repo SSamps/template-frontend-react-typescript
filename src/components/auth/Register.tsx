@@ -29,14 +29,14 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const resetErrorState = () => {
-        setFormData({
+    const resetErrorState = async () => {
+        setFormData((formData) => ({
             ...formData,
             registerError: '',
             emailErrorHighlight: false,
             passwordErrorHighlight: false,
             id: 1,
-        });
+        }));
     };
 
     const handleNotMatchingPasswordError = () => {
