@@ -14,74 +14,80 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
-        emailErrorHighlight: false,
         password: '',
         password2: '',
-        passwordErrorHighlight: false,
-        registerError: '',
     });
 
-    const { displayName, email, password, password2, registerError, emailErrorHighlight, passwordErrorHighlight } =
-        formData;
+    const [formServerErrorData, setFormServerErrorData] = useState({
+        emailErrorHighlight: false,
+        emailErrorMessage: '',
+        registerErrorMessage: '',
+    });
+
+    if (isAuthenticated) {
+        return <Redirect to='/dashboard' />;
+    }
+
+    const { displayName, email, password, password2 } = formData;
+
+    const { registerErrorMessage, emailErrorHighlight, emailErrorMessage } = formServerErrorData;
+
+    const passwordsMatch: boolean = password === password2;
+
+    const formHasErrors = (): boolean => {
+        let errors: boolean[] = [!passwordsMatch];
+        return errors.every((v) => v);
+    };
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const resetErrorStateTemp = async () => {
-        setFormData({
-            ...formData,
-            registerError: '',
+    const resetServerErrorState = () => {
+        setFormServerErrorData({
+            ...formServerErrorData,
+            registerErrorMessage: '',
+            emailErrorMessage: '',
             emailErrorHighlight: false,
-            passwordErrorHighlight: false,
         });
     };
 
-    const handleNotMatchingPasswordError = (resetErrorState: any) => {
-        setFormData({ ...resetErrorState, registerError: 'Passwords do not match', passwordErrorHighlight: true });
-    };
-
-    const handleRequestError = (resetErrorState: any, err: AxiosResponse<AxiosError<any> | Error>) => {
+    const handleRequestError = (err: AxiosResponse<AxiosError<any> | Error>) => {
         if (axios.isAxiosError(err) && err.response) {
             switch (err.response.status) {
                 case 400:
-                    setFormData({
-                        ...resetErrorState,
-                        registerError: 'An account already exists with that email address.',
+                    setFormServerErrorData((prevFormServerErrorData) => ({
+                        ...prevFormServerErrorData,
+                        emailErrorMessage: 'An account already exists with that email address.',
                         emailErrorHighlight: true,
-                    });
+                    }));
                     break;
                 default:
-                    setFormData({ ...resetErrorState, registerError: 'Server error: Code ' + err.response.status });
+                    console.log('returning an error with a code other than 400');
+                    setFormServerErrorData((prevFormServerErrorData) => ({
+                        ...prevFormServerErrorData,
+                        // @ts-ignore
+                        registerErrorMessage: 'Server error: Code ' + err.response.status,
+                    }));
             }
         } else {
-            setFormData({ ...resetErrorState, registerError: 'Server error' });
+            setFormServerErrorData((prevFormServerErrorData) => ({
+                ...prevFormServerErrorData,
+                registerErrorMessage: 'Server error',
+            }));
         }
     };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        let resetErrorState = {
-            ...formData,
-            registerError: '',
-            emailErrorHighlight: false,
-            passwordErrorHighlight: false,
-        };
-
         e.preventDefault();
-        await resetErrorStateTemp();
-        if (password !== password2) {
-            handleNotMatchingPasswordError(resetErrorState);
-        } else {
+        if (!formHasErrors()) {
+            resetServerErrorState();
             var err = await registerActionCreator(displayName, email, password);
             if (err) {
-                handleRequestError(resetErrorState, err);
+                handleRequestError(err);
             }
         }
     };
-
-    if (isAuthenticated) {
-        return <Redirect to='/dashboard' />;
-    }
 
     return (
         <Fragment>
@@ -111,9 +117,10 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                         required
                     />
                 </div>
+                {<p className='form-error-message'>{emailErrorMessage}</p>}
                 <div className='form-group'>
                     <input
-                        className={passwordErrorHighlight ? 'form-error-field' : ''}
+                        className={!passwordsMatch ? 'form-error-field' : ''}
                         type='password'
                         placeholder='Password'
                         name='password'
@@ -125,7 +132,7 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                 </div>
                 <div className='form-group'>
                     <input
-                        className={passwordErrorHighlight ? 'form-error-field' : ''}
+                        className={!passwordsMatch ? 'form-error-field' : ''}
                         type='password'
                         placeholder='Confirm Password'
                         name='password2'
@@ -135,8 +142,9 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                         required
                     />
                 </div>
-                {<p className='form-error-message'>{registerError}</p>}
+                {<p className='form-error-message'>{!passwordsMatch ? 'Passwords do not match' : ''}</p>}
                 <input type='submit' className='btn btn-primary' value='Register' />
+                {<p className='form-error-message'>{registerErrorMessage}</p>}
             </form>
             <p className='my-1'>
                 Already have an account? <Link to='/login'>Sign In</Link>
