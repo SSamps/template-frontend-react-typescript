@@ -54,7 +54,8 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
 
     const handleRequestError = (err: AxiosResponse<AxiosError<any> | Error>) => {
         if (axios.isAxiosError(err) && err.response) {
-            switch (err.response.status) {
+            let status = err.response.status;
+            switch (status) {
                 case 400:
                     setFormServerErrorData((prevFormServerErrorData) => ({
                         ...prevFormServerErrorData,
@@ -63,11 +64,9 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
                     }));
                     break;
                 default:
-                    console.log('returning an error with a code other than 400');
                     setFormServerErrorData((prevFormServerErrorData) => ({
                         ...prevFormServerErrorData,
-                        // @ts-ignore
-                        registerErrorMessage: 'Server error: Code ' + err.response.status,
+                        registerErrorMessage: 'Server error: Code ' + status,
                     }));
             }
         } else {
