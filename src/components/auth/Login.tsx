@@ -1,10 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { loginActionCreator, TloginActionCreator } from '../../redux/actions/authAction';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 interface Props {
     loginActionCreator: TloginActionCreator;
@@ -14,45 +13,70 @@ interface Props {
 const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
     const [formData, setFormData] = useState({
         email: '',
-        emailErrorHighlight: false,
         password: '',
-        passwordErrorHighlight: false,
         loginError: '',
     });
 
-    const { email, password, loginError, emailErrorHighlight, passwordErrorHighlight } = formData;
+    const [formServerErrorData, setFormServerErrorData] = useState({
+        loginErrorMessage: '',
+        passwordErrorHighlight: false,
+        emailErrorHighlight: false,
+    });
+
+    if (isAuthenticated) {
+        return <Redirect to='/dashboard' />;
+    }
+
+    const { email, password } = formData;
+    const { loginErrorMessage, emailErrorHighlight, passwordErrorHighlight } = formServerErrorData;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setFormData({ ...formData, loginError: '', emailErrorHighlight: false, passwordErrorHighlight: false });
-        var err = await loginActionCreator(email, password);
-        if (err) {
-            if (axios.isAxiosError(err) && err.response) {
-                switch (err.response.status) {
-                    case 400:
-                        setFormData({
-                            ...formData,
-                            loginError: 'Incorrect email or password',
-                            emailErrorHighlight: true,
-                            passwordErrorHighlight: true,
-                        });
-                        break;
-                    default:
-                        setFormData({ ...formData, loginError: 'Server error: Code ' + err.response.status });
-                }
-            } else {
-                setFormData({ ...formData, loginError: 'Server error' });
+    const resetServerErrorState = () => {
+        setFormServerErrorData({
+            ...formServerErrorData,
+            loginErrorMessage: '',
+            passwordErrorHighlight: false,
+            emailErrorHighlight: false,
+        });
+    };
+
+    const handleRequestError = (err: AxiosResponse<AxiosError<any> | Error>) => {
+        if (axios.isAxiosError(err) && err.response) {
+            let status = err.response.status;
+            switch (status) {
+                case 400:
+                    setFormServerErrorData((prevFormServerErrorData) => ({
+                        ...prevFormServerErrorData,
+                        loginErrorMessage: 'Incorrect email or password',
+                        emailErrorHighlight: true,
+                        passwordErrorHighlight: true,
+                    }));
+                    break;
+                default:
+                    setFormServerErrorData((prevFormServerErrorData) => ({
+                        ...prevFormServerErrorData,
+                        loginErrorMessage: 'Server error: Code ' + status,
+                    }));
             }
+        } else {
+            setFormServerErrorData((prevFormServerErrorData) => ({
+                ...prevFormServerErrorData,
+                loginErrorMessage: 'Server error',
+            }));
         }
     };
 
-    if (isAuthenticated) {
-        return <Redirect to='/dashboard' />;
-    }
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        resetServerErrorState();
+        var err = await loginActionCreator(email, password);
+        if (err) {
+            handleRequestError(err);
+        }
+    };
 
     return (
         <Fragment>
@@ -84,7 +108,7 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
                         required
                     />
                 </div>
-                {<p className='form-error-message'>{loginError}</p>}
+                {<p className='form-error-message'>{loginErrorMessage}</p>}
                 <input type='submit' className='btn btn-primary' value='Login' />
             </form>
             <p className='my-1'>
