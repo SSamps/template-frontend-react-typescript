@@ -94,52 +94,64 @@ const Register: React.FC<Props> = ({ registerActionCreator, isAuthenticated }) =
             <p className='lead'>
                 <i className='fas fa-user'></i> Create Your Account
             </p>
-            <form className='form' onSubmit={(e) => onSubmit(e)}>
+            <form className='form' onSubmit={onSubmit}>
                 <div className='form-group'>
-                    <input
-                        type='text'
-                        placeholder='Display Name'
-                        name='displayName'
-                        value={displayName}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Display Name
+                        <input
+                            type='text'
+                            placeholder='Display Name'
+                            name='displayName'
+                            value={displayName}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 <div className='form-group'>
-                    <input
-                        className={emailErrorHighlight ? 'form-error-field' : ''}
-                        type='email'
-                        placeholder='Email Address'
-                        name='email'
-                        value={email}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Email
+                        <input
+                            className={emailErrorHighlight ? 'form-error-field' : ''}
+                            type='email'
+                            placeholder='Email Address'
+                            name='email'
+                            value={email}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 {<p className='form-error-message'>{emailErrorMessage}</p>}
                 <div className='form-group'>
-                    <input
-                        className={!passwordsMatch ? 'form-error-field' : ''}
-                        type='password'
-                        placeholder='Password'
-                        name='password'
-                        minLength={8}
-                        value={password}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Password
+                        <input
+                            className={!passwordsMatch ? 'form-error-field' : ''}
+                            type='password'
+                            placeholder='Password'
+                            name='password'
+                            minLength={8}
+                            value={password}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 <div className='form-group'>
-                    <input
-                        className={!passwordsMatch ? 'form-error-field' : ''}
-                        type='password'
-                        placeholder='Confirm Password'
-                        name='password2'
-                        minLength={8}
-                        value={password2}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Confirm Password
+                        <input
+                            className={!passwordsMatch ? 'form-error-field' : ''}
+                            type='password'
+                            placeholder='Confirm Password'
+                            name='password2'
+                            minLength={8}
+                            value={password2}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 {<p className='form-error-message'>{!passwordsMatch ? 'Passwords do not match' : ''}</p>}
                 <input type='submit' className='btn btn-primary' value='Register' />

@@ -84,29 +84,35 @@ const Login: React.FC<Props> = ({ loginActionCreator, isAuthenticated }) => {
             <p className='lead'>
                 <i className='fas fa-user'></i> Sign in to your account
             </p>
-            <form className='form' onSubmit={(e) => onSubmit(e)}>
+            <form className='form' onSubmit={onSubmit}>
                 <div className='form-group'>
-                    <input
-                        className={emailErrorHighlight ? 'form-error-field' : ''}
-                        type='email'
-                        placeholder='Email Address'
-                        name='email'
-                        value={email}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Email
+                        <input
+                            className={emailErrorHighlight ? 'form-error-field' : ''}
+                            type='email'
+                            placeholder='Email Address'
+                            name='email'
+                            value={email}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 <div className='form-group'>
-                    <input
-                        className={passwordErrorHighlight ? 'form-error-field' : ''}
-                        type='password'
-                        placeholder='Password'
-                        name='password'
-                        minLength={8}
-                        value={password}
-                        onChange={(e) => onChange(e)}
-                        required
-                    />
+                    <label>
+                        Password
+                        <input
+                            className={passwordErrorHighlight ? 'form-error-field' : ''}
+                            type='password'
+                            placeholder='Password'
+                            name='password'
+                            minLength={8}
+                            value={password}
+                            onChange={onChange}
+                            required
+                        />
+                    </label>
                 </div>
                 {<p className='form-error-message'>{loginErrorMessage}</p>}
                 <input type='submit' className='btn btn-primary' value='Login' />
