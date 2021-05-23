@@ -1,7 +1,6 @@
-export interface IUser extends Document {
+export interface IUser {
     displayName: string;
     email: string;
-    password?: string;
     registrationDate: Date;
-    oldestValidJWT?: Date;
+    _id: string;
 }

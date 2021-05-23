@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authAction';
+import { registerActionCreator, TregisterActionCreator } from '../../redux/actions/authActions';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 

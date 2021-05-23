@@ -59,6 +59,8 @@ export const registerActionCreator =
 
         try {
             const res = await axios.post('/api/users', body, config);
+            setAuthToken(res.data.token);
+            localStorage.setItem('token', res.data.token);
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data,
@@ -87,6 +89,8 @@ export const loginActionCreator = (email: string, password: string) => async (di
 
     try {
         const res = await axios.post('/api/auth', body, config);
+        setAuthToken(res.data.token);
+        localStorage.setItem('token', res.data.token);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data,
@@ -108,5 +112,7 @@ export interface IlogoutAction {
 export type TlogoutActionCreator = () => void;
 
 export const logoutActionCreator = () => async (dispatch: Dispatch<IlogoutAction>) => {
+    localStorage.removeItem('token');
+    setAuthToken(null);
     dispatch({ type: LOGOUT });
 };

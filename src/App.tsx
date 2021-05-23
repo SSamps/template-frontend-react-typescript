@@ -13,7 +13,7 @@ import setAuthToken from './utils/setAuthToken';
 //Redux
 import { Provider } from 'react-redux';
 import store from './redux/reducers/root/reducerStore';
-import { loadUserActionCreator } from './redux/actions/authAction';
+import { loadUserActionCreator } from './redux/actions/authActions';
 //Axios
 import axios from 'axios';
 
