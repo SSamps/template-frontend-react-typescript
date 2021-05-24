@@ -29,7 +29,7 @@ const TestDataElement = ({ user, element, deleteTestDataActionCreator }: Props) 
             <div>
                 <button onClick={onClickDelete}>
                     {' '}
-                    {!waiting ? <i className='fas fa-times'></i> : <Spinner></Spinner>}
+                    {!waiting ? <i className='fas fa-times'></i> : <Spinner className='spinner-tiny'></Spinner>}
                 </button>{' '}
                 {element.testVar}{' '}
             </div>

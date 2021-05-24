@@ -61,6 +61,10 @@ ul {
     width: 40px;
 }
 
+.spinner-tiny {
+    width: 20px;
+}
+
 /* Forms */
 .form .form-group {
     margin: 1.2rem 0;

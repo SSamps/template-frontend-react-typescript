@@ -30,7 +30,6 @@ const TestDataNew = ({ user, addTestDataActionCreator }: Props) => {
         e.preventDefault();
         setUpdateStatus({ waiting: true });
         await addTestDataActionCreator(user._id, testData);
-        console.log('after addTextDataActionCreator in component');
         setUpdateStatus({ waiting: false });
     };
 
@@ -50,7 +49,11 @@ const TestDataNew = ({ user, addTestDataActionCreator }: Props) => {
                         />
                     </label>
                 </div>
-                {!waiting ? <input type='submit' className='btn btn-primary' value='Add' /> : <Spinner></Spinner>}
+                {!waiting ? (
+                    <input type='submit' className='btn btn-primary' value='Add' />
+                ) : (
+                    <Spinner className='spinner-button'></Spinner>
+                )}
             </form>
         </Fragment>
     );

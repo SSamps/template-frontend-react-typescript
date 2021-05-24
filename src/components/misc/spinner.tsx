@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 import spinner from '../../resources/img/Spinner.svg';
 
-const Spinner = () => {
+const Spinner = ({ className }: { className: string }) => {
     return (
         <Fragment>
-            <img src={spinner} className='spinner-button' alt='Loading...' />
+            <img src={spinner} className={className} alt='Loading...' />
         </Fragment>
     );
 };
