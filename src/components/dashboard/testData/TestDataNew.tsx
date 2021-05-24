@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { TaddTestDataActionCreator, addTestDataActionCreator } from '../../../redux/actions/testDataActions';
 import { IrootStateAuthed } from '../../../redux/reducers/root/rootReducer';
 import { IUser } from '../../../types/models/User';
+import Spinner from '../../misc/spinner';
 
 interface Props {
     user: IUser;
