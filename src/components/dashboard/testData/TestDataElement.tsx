@@ -21,7 +21,6 @@ const TestDataElement = ({ user, element, deleteTestDataActionCreator }: Props) 
     const onClickDelete = async () => {
         setRemovalStatus({ waiting: true });
         await deleteTestDataActionCreator(user._id, element._id);
-        setRemovalStatus({ waiting: false });
     };
 
     return (
