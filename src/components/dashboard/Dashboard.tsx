@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
 import { IUser } from '../../types/models/User';
-import TestData from './TestData';
+import TestData from './testData/TestData';
 
 interface Props {
     user: IUser | null;

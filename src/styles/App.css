@@ -46,6 +46,16 @@ img {
     margin-bottom: 3rem;
 }
 
+/* Utilities */
+.smallContainer {
+    max-width: 1100px;
+    margin: auto;
+    overflow: hidden;
+    padding: 0 2rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
 /* Forms */
 .form .form-group {
     margin: 1.2rem 0;

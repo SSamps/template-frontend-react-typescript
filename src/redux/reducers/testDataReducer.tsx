@@ -8,13 +8,13 @@ export interface ItestDataElement {
 
 export interface ItestDataState {
     loading: boolean;
-    testData: ItestDataElement[] | null;
-    error: { msg: string } | null;
+    testData: ItestDataElement[];
+    error: { msg: string; status: string } | null;
 }
 
 const initialState = {
     loading: true,
-    testData: null,
+    testData: [],
     error: null,
 };
 
@@ -31,10 +31,12 @@ export default function reducer(state: ItestDataState = initialState, action: An
         case TEST_DATA_ADD:
             return {
                 ...state,
+                testData: payload,
             };
         case TEST_DATA_DELETE:
             return {
                 ...state,
+                testData: state.testData?.filter((element) => element._id !== payload),
             };
         case TEST_DATA_ERROR:
             return {
