@@ -13,17 +13,25 @@ interface Props {
 const TestDataNew = ({ user, addTestDataActionCreator }: Props) => {
     const [formData, setFormData] = useState({
         testData: '',
+        addingNew: false,
+    });
+    const [updateStatus, setUpdateStatus] = useState({
+        waiting: false,
     });
 
     const { testData } = formData;
+    const { waiting } = updateStatus;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        addTestDataActionCreator(user._id, testData);
+        setUpdateStatus({ waiting: true });
+        await addTestDataActionCreator(user._id, testData);
+        console.log('after addTextDataActionCreator in component');
+        setUpdateStatus({ waiting: false });
     };
 
     return (
@@ -42,7 +50,7 @@ const TestDataNew = ({ user, addTestDataActionCreator }: Props) => {
                         />
                     </label>
                 </div>
-                <input type='submit' className='btn btn-primary' value='Add' />
+                {!waiting ? <input type='submit' className='btn btn-primary' value='Add' /> : <Spinner></Spinner>}
             </form>
         </Fragment>
     );
