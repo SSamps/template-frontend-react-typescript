@@ -9,7 +9,6 @@ import {
     LOGIN_FAIL,
     LOGOUT,
 } from './actionTypes';
-import setAuthToken from '../../utils/setAuthToken';
 import { IUser } from '../../types/models/User';
 
 // Load User
@@ -19,10 +18,6 @@ export interface IloadUserAction {
 }
 
 export const loadUserActionCreator = async (dispatch: Dispatch<IloadUserAction>) => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-
     try {
         const res = await axios.get('/api/auth');
         dispatch({
@@ -59,8 +54,6 @@ export const registerActionCreator =
 
         try {
             const res = await axios.post('/api/users', body, config);
-            setAuthToken(res.data.token);
-            localStorage.setItem('token', res.data.token);
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data,
@@ -89,8 +82,6 @@ export const loginActionCreator = (email: string, password: string) => async (di
 
     try {
         const res = await axios.post('/api/auth', body, config);
-        setAuthToken(res.data.token);
-        localStorage.setItem('token', res.data.token);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data,
@@ -112,7 +103,5 @@ export interface IlogoutAction {
 export type TlogoutActionCreator = () => void;
 
 export const logoutActionCreator = () => async (dispatch: Dispatch<IlogoutAction>) => {
-    localStorage.removeItem('token');
-    setAuthToken(null);
     dispatch({ type: LOGOUT });
 };
