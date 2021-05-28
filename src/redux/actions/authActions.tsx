@@ -9,8 +9,8 @@ import {
     LOGIN_FAIL,
     LOGOUT,
 } from './actionTypes';
-import setAuthToken from '../../utils/setAuthToken';
 import { IUser } from '../../types/models/User';
+import store from '../reducers/root/reducerStore';
 
 // Load User
 export interface IloadUserAction {
@@ -19,10 +19,6 @@ export interface IloadUserAction {
 }
 
 export const loadUserActionCreator = async (dispatch: Dispatch<IloadUserAction>) => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-
     try {
         const res = await axios.get('/api/auth');
         dispatch({
@@ -63,6 +59,7 @@ export const registerActionCreator =
                 type: REGISTER_SUCCESS,
                 payload: res.data,
             });
+            loadUserActionCreator(store.dispatch);
         } catch (err) {
             dispatch({ type: REGISTER_FAIL });
             return err;
@@ -91,6 +88,7 @@ export const loginActionCreator = (email: string, password: string) => async (di
             type: LOGIN_SUCCESS,
             payload: res.data,
         });
+        loadUserActionCreator(store.dispatch);
     } catch (err) {
         dispatch({ type: LOGIN_FAIL });
         return err;
