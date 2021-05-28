@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logoutActionCreator, TlogoutActionCreator } from '../../redux/actions/authAction';
+import { logoutActionCreator, TlogoutActionCreator } from '../../redux/actions/authActions';
 import { Fragment } from 'react';
 import { IrootState } from '../../redux/reducers/root/rootReducer';
 

@@ -10,6 +10,13 @@ import {
 import { IUser } from '../../types/models/User';
 import { AnyAction } from 'redux';
 
+export interface IauthStateAuthed {
+    token: string | null;
+    isAuthenticated: boolean;
+    loading: boolean;
+    user: IUser;
+}
+
 export interface IauthState {
     token: string | null;
     isAuthenticated: boolean;
@@ -37,7 +44,6 @@ export default function reducer(state: IauthState = initialState, action: AnyAct
             };
         case LOGIN_SUCCESS:
         case REGISTER_SUCCESS:
-            localStorage.setItem('token', payload.token);
             return {
                 ...state,
                 ...payload,
@@ -48,7 +54,6 @@ export default function reducer(state: IauthState = initialState, action: AnyAct
         case REGISTER_FAIL:
         case AUTH_ERROR:
         case LOGOUT:
-            localStorage.removeItem('token');
             return {
                 ...state,
                 token: null,

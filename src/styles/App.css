@@ -30,10 +30,6 @@ ul {
     list-style: none;
 }
 
-img {
-    width: 100%;
-}
-
 /* Required */
 
 /* Utilities */
@@ -44,6 +40,29 @@ img {
     padding: 0 2rem;
     margin-top: 6rem;
     margin-bottom: 3rem;
+}
+
+.smallContainer {
+    max-width: 1100px;
+    margin: auto;
+    overflow: hidden;
+    padding: 0 2rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.spinnerContainer {
+    width: 200px;
+    margin: 'auto';
+    display: 'block';
+}
+
+.spinner-button {
+    width: 40px;
+}
+
+.spinner-tiny {
+    width: 20px;
 }
 
 /* Forms */
